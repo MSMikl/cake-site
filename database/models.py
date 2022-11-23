@@ -1,5 +1,7 @@
+from django import forms
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.forms import ModelForm
 from django.utils import timezone
 
 # Create your models here.
@@ -72,7 +74,7 @@ class Order(models.Model):
         verbose_name='Заказчик'
     )
     layers = models.ForeignKey(
-        'Layers',
+        'Layer',
         verbose_name='Количество слоев',
         on_delete=models.SET_NULL,
         null=True,
@@ -134,6 +136,11 @@ class Order(models.Model):
         null=True,
         blank=True
     )
+    delivery_details = models.TextField(
+        'Комментарии для курьера',
+        blank=True,
+        default='',
+    )
 
     def __str__(self) -> str:
         return f"Заказ номер {self.number}"
@@ -143,7 +150,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
 
-class Layers(models.Model):
+class Layer(models.Model):
     num_layers = models.IntegerField(
         'Количество слоев',
     )
@@ -159,6 +166,14 @@ class Layers(models.Model):
         null=True,
         blank=True,
     )
+    available = models.BooleanField(
+        'Доступно к заказу',
+        default=True,
+    )
+
+    @property
+    def int_price(self):
+        return int(self.price)
 
     def __str__(self) -> str:
         return f"{self.num_layers}"
@@ -186,6 +201,14 @@ class Shape(models.Model):
         null=True,
         blank=True,
     )
+    available = models.BooleanField(
+        'Доступно к заказу',
+        default=True,
+    )
+
+    @property
+    def int_price(self):
+        return int(self.price)
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -213,6 +236,14 @@ class Topping(models.Model):
         null=True,
         blank=True,
     )
+    available = models.BooleanField(
+        'Доступно к заказу',
+        default=True,
+    )
+
+    @property
+    def int_price(self):
+        return int(self.price)
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -240,6 +271,14 @@ class Berries(models.Model):
         null=True,
         blank=True,
     )
+    available = models.BooleanField(
+        'Доступно к заказу',
+        default=True,
+    )
+
+    @property
+    def int_price(self):
+        return int(self.price)
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -267,6 +306,14 @@ class Decor(models.Model):
         null=True,
         blank=True,
     )
+    available = models.BooleanField(
+        'Доступно к заказу',
+        default=True,
+    )
+
+    @property
+    def int_price(self):
+        return int(self.price)
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -274,3 +321,10 @@ class Decor(models.Model):
     class Meta:
         verbose_name = 'Опция украшения'
         verbose_name_plural = 'Опции украшения'
+
+
+class OrderForm(ModelForm):
+    layers = forms.ModelChoiceField(Layer.objects.all(), widget=forms.RadioSelect())
+    class Meta:
+        model = Order
+        fields = ['layers', 'shape', 'topping', 'berries', 'decor', 'text', 'comments']

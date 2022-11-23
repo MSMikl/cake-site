@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Customer, Order, Decor, Shape, Layers, Topping, Berries
+from .models import Customer, Order, Decor, Shape, Layer, Topping, Berries
 
 # Register your models here.
 
@@ -15,8 +15,8 @@ class OrderAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Layers)
-class LayersAdmin(admin.ModelAdmin):
+@admin.register(Layer)
+class LayerAdmin(admin.ModelAdmin):
     pass
 
 
