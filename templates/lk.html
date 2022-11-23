@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="ru">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="Style.css">
+	<link rel="stylesheet" href="{% static 'Style.css' %}">
 	<!-- Для разработки: -->
 	<script src="https://unpkg.com/vue@3"></script>
 	<!-- Для продакшина: -->
@@ -14,13 +15,13 @@
 	<title>Личный кабинет</title>
 </head>
 <body>
-<header class="navbar navbar-expand-xl navbar-light fixed-top bg-white py-4">
-	<nav class="container">
+<nav class="navbar navbar-expand-xl navbar-light fixed-top bg-white py-4">
+	<div class="container">
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<a class="navbar-brand" href="#">
-			<img src="img/Logo.svg" alt="CakeBake">
+			<img src="{% static 'img/Logo.svg' %}" alt="CakeBake">
 		</a>
 		<div class="collapse navbar-collapse justify-content-end" id="navbar">
 			<ul class="navbar-nav">
@@ -42,31 +43,30 @@
 				</li>
 				<li class="nav-item d-flex align-items-center">
 					<a class="nav-link fw-lighter me-1 cake_blue position-relative" href="#">
-						<img src="img/shopping-cart.svg" alt="">
+						<img src="{% static 'img/shopping-cart.svg' %}" alt="">
 						<span class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8">1</span>
 					</a>
 					<a class="nav-link fw-lighter me-1 cake_blue position-relative" href="#">
-						<img src="img/user.svg" alt="">
+						<img src="{% static 'img/user.svg' %}" alt="">
 						<span class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8">1</span>
 					</a>
 					<a class="nav-link fw-lighter cake_grey fs_12" href="#">
-						Ирина
+						{{user.name}}
 					</a>
 				</li>
 			</ul>
 		</div>
-	</nav>
-</header>
+	</div>
+</nav>
 <div class="container mt-header mb-5">
 	<div class="row mt-5">
 		<div class="col-12 col-xxl-6 d-flex justify-content-center">
-			<div><img src="img/Cake2.png" alt=""></div>
+			<div><img src="{% static 'img/Cake2.png' %}" alt=""></div>
 		</div>
 		<div class="col-12 col-xxl-6 d-flex flex-column justify-content-center align-items-center align-items-xxl-start" id="LK">
 			<form class="d-none">
 				<input v-model="Name" name="NAME">
 				<input v-model="Phone" name="PHONE">
-				<input v-model="Email" name="EMAIL">
 				<button type="submit" ref="HiddenFormSubmit">Apply Changes</button>
 			</form>
 			<v-form :validation-schema="Schema" @submit="ApplyChanges">
@@ -91,9 +91,6 @@
 						<li class="list-group-item border-0 ps-0">
 							<h1 class="fs_40 cake_blue">Телефон</h1>
 						</li>
-						<li class="list-group-item border-0 ps-0">
-							<h1 class="fs_40 cake_blue">Почта</h1>
-						</li>
 					</ul>
 					<ul class="list-group">
 						<li class="list-group-item border-0 py-61 position-relative">
@@ -104,24 +101,106 @@
 							<v-field v-model="Phone" type="text" name="phone_format" id="phone" :readonly="!Edit" class="form-control my-2 cake__textinput"></v-field>
 							<error-message name="phone_format" class="position-absolute bottom-0 cake_pink fs_12"></error-message>
 						</li>
-						<li class="list-group-item border-0 py-61 position-relative">
-							<v-field v-model="Email" type="text" name="email_format" id="email" :readonly="!Edit" class="form-control my-2 cake__textinput"></v-field>
-							<error-message name="email_format" class="position-absolute bottom-0 cake_pink fs_12"></error-message>
-						</li>
 					</ul>
 				</div>
 			</v-form>
 			<h2 class="fs_40 cake_pink mt-5">Мои заказы</h2>
+			{% if not orders %}
 			<span class="cake_grey">У вас еще нет заказов.</span>
 			<p class="cake_grey">Вы можете добавить торт из <a href="./index.html#step2" class="text-decoration-none cake_pink">Каталога</a> или <a href="./index.html#step3" class="text-decoration-none cake_pink">Создать свой</a>.</p>
 			<span class="cake_grey">Есть вопросы?</span>
 			<span class="cake_grey">Воспользуйтесь нашим <a href="https://vk.com/devmanorg" class="text-decoration-none cake_pink">чат-ботом</a>.</span>
+			{% else %}
+			{% for order in orders %}
+			<section class="my-2">
+				<span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal2">
+					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+					</svg>
+					<span class="ms-1">Заказ номер {{ order.number }}</span>
+				</span>
+				<aside class="modal fade" id="OrderModal2" tabindex="-1" aria-labelledby="ModalLabel2" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title cake_pink" id="ModalLabel2">Заказ номер {{ order.number }}</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<span class="cake_blue">Уровней: {{order.layers}}</span><br>
+								<span class="cake_blue">Форма: {{order.shape}}</span><br>
+								<span class="cake_blue">Топпинг: {{order.topping}}</span><br>
+								<span class="cake_blue">Ягоды: {{order.berries}}</span><br>
+								<span class="cake_blue">Декор: {{order.decor}}</span><br>
+								<span class="cake_blue">{% if order.text %}Надпись: {{order.text}} {% else %} Без надписи {% endif %}</span><br>
+								<span class="cake_pink">Цена: {{order.price}}₽</span>
+							</div>
+							<div class="modal-footer d-flex justify-content-between">
+								<span class="cake_blue d-flex">Статус: {{order.get_status_display}}</span>
+								<span class="cake_blue d-flex align-items-center">Время доставки: {{order.delivery_date}}</span>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+			{% endfor %}
+			{% endif %}
+
 			<button class="btn text-white rounded-pill align-self-end px-5 mt-3 shadow-none cake__button cake__bg_pink">Выйти</button>
 		</div>
 	</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="lk.js"></script>
+<script>
+	{% verbatim %}
+	Vue.createApp({
+    components: {
+        VForm: VeeValidate.Form,
+        VField: VeeValidate.Field,
+        ErrorMessage: VeeValidate.ErrorMessage,
+    },
+    data() {
+        return {
+			{% endverbatim %}
+            Edit: false,
+            Name: '{{user.name}}',
+            Phone: '{{user.phone_number}}',
+			{% verbatim %}
+            Schema: {
+                name_format: (value) => {
+                    const regex = /^[a-zA-Zа-яА-я]+$/
+                    if (!value) {
+                        return '⚠ Поле не может быть пустым';
+                    }
+                    if ( !regex.test(value)) {
+
+                        return '⚠ Недопустимые символы в имени';
+                    }
+                    return true;
+                },
+                phone_format: (value) => {
+                    const regex = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/
+                    if (!value) {
+                        return '⚠ Поле не может быть пустым';
+                    }
+                    if ( !regex.test(value)) {
+
+                        return '⚠ Формат телефона нарушен';
+                    }
+                    return true;
+                },
+            }
+        }
+    },
+    methods: {
+        ApplyChanges() {
+            this.Edit = false
+            this.$refs.HiddenFormSubmit.click()
+        }
+    }
+}).mount('#LK')
+{% endverbatim %}
+</script>
 </body>
 </html>

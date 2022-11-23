@@ -61,6 +61,16 @@ class Customer(AbstractUser):
 
 
 class Order(models.Model):
+    PREPARING = 'Preparing'
+    IN_DELIVERY = 'In delivery'
+    COMPLETED = 'Completed'
+
+    STATUSES = [
+        (PREPARING, 'Готовится'),
+        (IN_DELIVERY, 'Доставляется'),
+        (COMPLETED, 'Завершен'),
+    ]
+
     number = models.AutoField(
         'Номер заказа',
         primary_key=True,
@@ -87,23 +97,20 @@ class Order(models.Model):
     )
     topping = models.ForeignKey(
         'Topping',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.SET_DEFAULT,
+        default='1',
         verbose_name='Топпинг'
     )
     berries = models.ForeignKey(
         'Berries',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.SET_DEFAULT,
+        default='1',
         verbose_name='Ягоды'
     )
     decor = models.ForeignKey(
         'Decor',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.SET_DEFAULT,
+        default='1',
         verbose_name='Украшение'
     )
     text = models.CharField(
@@ -129,6 +136,12 @@ class Order(models.Model):
         'Адрес доставки',
         blank=True,
         default=''
+    )
+    status = models.CharField(
+        'Статус заказа',
+        max_length=20,
+        choices=STATUSES,
+        default=PREPARING,
     )
     delivery_date = models.DateTimeField(
         'Дата и время доставки',

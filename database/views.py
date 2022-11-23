@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic.edit import FormView
 
-from .models import Order, OrderForm, Layer, Shape, Topping, Berries, Decor
+from .models import Order, OrderForm, Layer, Shape, Topping, Berries, Decor, Customer
 
 # Create your views here.
 
@@ -25,3 +25,14 @@ class IndexView(View):
     def post(self, request):
         print(request.POST)
         return redirect('index')
+
+
+class LKView(View):
+
+    def get(self, request):
+        user = Customer.objects.filter(id=request.user.id).prefetch_related('orders').first()
+        context = {
+            'user': user,
+            'orders': user.orders.all()
+        }
+        return render(request, 'lk.html', context=context)
