@@ -61,3 +61,4 @@ class Command(BaseCommand):
         Decor.objects.bulk_create(
             [Decor(price=price, name=value) for (value, price) in DATA['Decors']]
         )
+        self.stdout.write("New data created successfully")
