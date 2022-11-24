@@ -6,6 +6,8 @@ from .models import Customer, Order, Decor, Shape, Layer, Topping, Berries
 
 @admin.register(Customer)
 class CutomerAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'phone_number']
+    list_display_links = ['__str__', 'phone_number']
     exclude = ['last_login', 'groups', 'user_permissions', 'password']
     readonly_fields = ['is_superuser', 'date_joined']
 

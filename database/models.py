@@ -26,11 +26,15 @@ class CustomerManager(BaseUserManager):
 
 
 class Customer(AbstractUser):
-    username = None,
-    email = None,
+    username = None
+    email = None
+    first_name = None
+    last_name = None
     name = models.CharField(
         'Имя покупателя',
         max_length=100,
+        default='',
+        blank=True,
     )
     phone_number = models.CharField(
         'Номер телефона',
