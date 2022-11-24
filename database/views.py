@@ -2,7 +2,7 @@ import requests
 
 from random import choice
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -88,3 +88,9 @@ class LoginView(View):
         user = authenticate(phone_number=phone_number, password=code)
         if user:
             login(request, user)
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('index')

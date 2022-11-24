@@ -195,7 +195,6 @@
 
 		<article id="VueApp">
 			<section class="row pt-header" id="step3">
-				{{ form }}
 				<h2 class="font_Gogh fs_40 cake_blue text-center">Создать свой торт</h2>
 				<v-form :validation-schema="schema1" @submit="ToStep4">
 					<div class="d-flex justify-content-end align-items-center position-relative">
@@ -256,10 +255,21 @@
 						<label for="comment" class="cake_blue">Комментарий к заказу</label>
 						<textarea v-model="Comments" :class="Comments ? 'cake__border_blue': ''" name="comment" id="comment" rows="3" class="form-control mt-2 cake__textinput" style="resize: none"></textarea>
 					</div>
+					{% if user.is_authenticated %}
+					<!-- Тут вот для авторизованного пользователя исходный вариант -->
+						<div class="d-flex justify-content-end">
+							<button type="submit" class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">Подтвердить</button>
+							<a href="#step4" ref="ToStep4" class="d-none"></a>
+						</div>
+					{% else %}
+					<!-- А вот тут бы открывать по кнопке форму регистрации  -->
 					<div class="d-flex justify-content-end">
-						<button type="submit" class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">Подтвердить</button>
-						<a href="#step4" ref="ToStep4" class="d-none"></a>
+						<form>
+							<button type="submit" class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">Подтвердить</button>
+							<a class="nav-link fw-lighter me-1 cake_blue position-relative" href="#RegModal" data-bs-toggle="modal"></a>
+						</form>
 					</div>
+					{% endif %}
 				</v-form>
 			</section>
 

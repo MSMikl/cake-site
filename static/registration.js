@@ -55,7 +55,7 @@ Vue.createApp({
             else if (this.Step === 'Code') {
                 this.Code = this.RegInput
                 this.$refs.HiddenFormSubmitPhone.click()
-                axios.get('login/', {params: {phone_number: this.PhoneNumber, code: this.RegInput}})
+                // axios.get('login/', {params: {phone_number: this.PhoneNumber, code: this.RegInput}})
                 this.Step = 'Finish'
                 this.RegInput = 'Регистрация успешна'
             }

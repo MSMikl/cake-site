@@ -145,8 +145,9 @@
 			</section>
 			{% endfor %}
 			{% endif %}
-
-			<button class="btn text-white rounded-pill align-self-end px-5 mt-3 shadow-none cake__button cake__bg_pink">Выйти</button>
+			<form method="get" action="{% url 'logout' %}">
+				<button class="btn text-white rounded-pill align-self-end px-5 mt-3 shadow-none cake__button cake__bg_pink">Выйти</button>				
+			</form>			
 		</div>
 	</div>
 </div>
