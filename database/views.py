@@ -1,3 +1,5 @@
+import requests
+
 from random import choice
 from django.conf import settings
 from django.contrib.auth import authenticate, login
@@ -78,3 +80,11 @@ class RegisterView(View):
         if user:
             login(request, user)
             return redirect('index')
+
+class LoginView(View):
+    def get(self, request):
+        phone_number = request.GET.get('phone_number')
+        code = request.GET.get.get('code')
+        user = authenticate(phone_number=phone_number, password=code)
+        if user:
+            login(request, user)
