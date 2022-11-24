@@ -16,6 +16,9 @@ from environs import Env
 env = Env()
 env.read_env()
 
+TG_TOKEN = env('TG_TOKEN', None)
+TG_CHAT_ID = env('TG_CHAT_ID', None)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

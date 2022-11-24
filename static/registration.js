@@ -38,19 +38,23 @@ Vue.createApp({
             },
             Step: 'Number',
             RegInput: '',
-            EnteredNumber: ''
+            EnteredNumber: '',
+            PhoneNumber: '',
+            Code: ''
         }
     },
     methods: {
         RegSubmit() {
             if (this.Step === 'Number') {
-                this.$refs.HiddenFormSubmitReg.click()
+                // this.$refs.HiddenFormSubmitPhone.click()
                 this.Step = 'Code'
-                this.EnteredNumber = this.RegInput
+                this.PhoneNumber = this.RegInput
+                axios.get('phone/', {params: {phone_number: this.PhoneNumber}})
                 this.RegInput = ''
             }
-            else {
-                this.$refs.HiddenFormSubmitReg.click()
+            else if (this.Step === 'Code') {
+                this.Code = this.RegInput
+                this.$refs.HiddenFormSubmitPhone.click()
                 this.Step = 'Finish'
                 this.RegInput = 'Регистрация успешна'
             }

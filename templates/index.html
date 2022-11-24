@@ -12,6 +12,7 @@
 	<!-- Для продакшина: -->
 	<!-- <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script> -->
 	<script src="https://unpkg.com/vee-validate"></script>
+	<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 	<title>Тортики</title>
 </head>
 <body>
@@ -72,9 +73,11 @@
 					<div class="modal-header border-0 py-0">
 						<label for="reg" class="modal-title font_Gogh fs_40 cake_blue" id="RegModalLabel">Вход / Регистрация</label>
 					</div>
-					<form class="d-none">
-						<input v-model="RegInput" type="text" name="REG">
-						<button type="submit" ref="HiddenFormSubmitReg">reg</button>
+					<form class="d-none" method="post" action="{% url 'phone' %}">
+						<input v-model="PhoneNumber" type="text" name="phone_number">
+						<input v-model="RegInput" type="text" name="code">
+						<button type="submit" ref="HiddenFormSubmitPhone">reg</button>
+						{% csrf_token %}
 					</form>
 					<v-form :validation-schema="RegSchema" class="modal-body position-relative d-flex flex-column align-items-center px-5 pb-4" @submit="RegSubmit">
 						<v-field v-if="RegInput !== 'Регистрация успешна'" v-model="RegInput" name="reg" type="text" id="reg" :placeholder="Step === `Number` ? `Введите ваш номер` : `Введите код`" class="form-control cake__textinput"></v-field>
