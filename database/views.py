@@ -10,10 +10,8 @@ from django.views.generic.edit import FormView
 
 from .models import Order, OrderForm, Layer, Shape, Topping, Berries, Decor, Customer
 
-# Create your views here.
 
 class IndexView(View):
-    
     def get(self, request):
         layers = Layer.objects.filter(available=True)
         context = {
@@ -81,13 +79,16 @@ class RegisterView(View):
             login(request, user)
             return redirect('index')
 
+
 class LoginView(View):
     def get(self, request):
         phone_number = request.GET.get('phone_number')
-        code = request.GET.get.get('code')
+        code = request.GET.get('code')
         user = authenticate(phone_number=phone_number, password=code)
         if user:
             login(request, user)
+
+        return HttpResponse('success')
 
 
 class LogoutView(View):

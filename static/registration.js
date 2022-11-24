@@ -7,13 +7,15 @@ Vue.createApp({
     data() {
         return {
             RegSchema: {
-                reg: (value) => {
-                    if (value) {
-                        return true;
+                phone: (value) => {
+                    if (this.regFormField.name !== 'phone') {
+                        return true
                     }
-                    return 'Поле не заполнено';
-                },
-                phone_format: (value) => {
+
+                    if (!value) {
+                        return 'Поле не заполнено';
+                    }
+
                     const regex = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/
                     if (!value) {
                         return true;
@@ -24,7 +26,15 @@ Vue.createApp({
                     }
                     return true;
                 },
-                code_format: (value) => {
+                code: (value) => {
+                    if (this.regFormField.name !== 'code') {
+                        return true
+                    }
+
+                    if (!value) {
+                        return 'Поле не заполнено';
+                    }
+
                     const regex = /^[a-zA-Z0-9]+$/
                     if (!value) {
                         return true;
@@ -36,38 +46,49 @@ Vue.createApp({
                     return true;
                 }
             },
-            Step: 'Number',
+            regFormState: 'phone',
             RegInput: '',
-            EnteredNumber: '',
             PhoneNumber: '',
-            Code: ''
+            Code: '',
+            isLoading: false
         }
     },
     methods: {
-        RegSubmit() {
-            if (this.Step === 'Number') {
-                // this.$refs.HiddenFormSubmitPhone.click()
-                this.Step = 'Code'
+        async RegSubmit() {
+            if (this.regFormState === 'phone') {
+                this.regFormState = 'code'
                 this.PhoneNumber = this.RegInput
-                axios.get('phone/', {params: {phone_number: this.PhoneNumber}})
+                this.isLoading = true
+                const response = await axios.get('phone/', {params: {phone_number: this.PhoneNumber}})
+                this.isLoading = false
                 this.RegInput = ''
-            }
-            else if (this.Step === 'Code') {
+            } else if (this.regFormState === 'code') {
                 this.Code = this.RegInput
-                this.$refs.HiddenFormSubmitPhone.click()
-                // axios.get('login/', {params: {phone_number: this.PhoneNumber, code: this.RegInput}})
-                this.Step = 'Finish'
-                this.RegInput = 'Регистрация успешна'
+                this.isLoading = true
+                await axios.get('login/', {params: {phone_number: this.PhoneNumber, code: this.RegInput}})
+                this.isLoading = false
+                this.regFormState = 'finished'
+                this.RegInput = ''
+                this.$refs.resetButton.click()
+                location.reload()
             }
-        },
-        ToRegStep1() {
-            this.Step = 'Number'
-            this.RegInput = this.EnteredNumber
         },
         Reset() {
-            this.Step = 'Number'
+            this.regFormState = 'phone'
             this.RegInput = ''
-            EnteredNumber = ''
+        }
+    },
+    computed: {
+        regFormField() {
+            return {
+                isFinished: this.regFormState === 'finished',
+                placeholder: this.regFormState === `phone` ? `Введите ваш номер` : `Введите код`,
+                name: this.regFormState,
+                info: {
+                    code: 'Осталось времени: 05:00',
+                    phone: 'Нажимая на кнопку, вы соглашаетесь на обработку персональных данных в соответствии с политикой конфиденциальности'
+                }[this.regFormState]
+            }
         }
     }
 }).mount('#RegModal')
