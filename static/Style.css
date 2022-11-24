@@ -133,3 +133,6 @@ li .cake__textinput:read-only {
 .z-index-1 {
     z-index: -1;
 }
+.max-w-full {
+    max-width: 100%;
+}
