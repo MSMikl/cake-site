@@ -17,6 +17,8 @@ jobs:
              -p ${{ secrets.DOCKER_PASSWORD }}
       - name: echo
         run: echo $REPO
+      - name: ls
+        run: ls -al && pwd
       - name: Build Docker image
         run: docker build . -t $REPO -f ./Dockerfile
       - name: Publish Docker image
