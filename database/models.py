@@ -353,3 +353,9 @@ class OrderForm(ModelForm):
     class Meta:
         model = Order
         fields = ['layers', 'shape', 'topping', 'berries', 'decor', 'text', 'comments']
+
+
+class UserForm(ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['name', 'phone_number']

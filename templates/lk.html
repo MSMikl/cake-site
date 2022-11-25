@@ -44,11 +44,11 @@
 				<li class="nav-item d-flex align-items-center">
 					<a class="nav-link fw-lighter me-1 cake_blue position-relative" href="#">
 						<img src="{% static 'img/shopping-cart.svg' %}" alt="">
-						<span class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8">1</span>
+						<span class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8"></span>
 					</a>
 					<a class="nav-link fw-lighter me-1 cake_blue position-relative" href="#">
 						<img src="{% static 'img/user.svg' %}" alt="">
-						<span class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8">1</span>
+						<span class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8"></span>
 					</a>
 					<a class="nav-link fw-lighter cake_grey fs_12" href="#">
 						{{user.name}}
@@ -65,13 +65,14 @@
 		</div>
 		<div class="col-12 col-xxl-6 d-flex flex-column justify-content-center align-items-center align-items-xxl-start" id="LK">
 			<form class="d-none">
-				<input v-model="Name" name="NAME">
-				<input v-model="Phone" name="PHONE">
-				<button type="submit" ref="HiddenFormSubmit">Apply Changes</button>
+				<input v-model="Name" name="name">
+				<input v-model="Phone" name="phone_number">
+				{% csrf_token %}
+				<button type="submit" formmethod="post" ref="HiddenFormSubmit">Apply Changes</button>
 			</form>
 			<v-form :validation-schema="Schema" @submit="ApplyChanges">
 				<div class="d-flex w-100 justify-content-center justify-content-xxl-between align-items-center">
-					<h1 class="font_Gogh fs_40 cake_blue">Личный кабинет</h1>
+					<h1 class="font_Gogh fs_40 cake_blue">Личный кабинет </h1>
 					<button v-if="!Edit" @click="Edit = true" class="btn shadow-none align-self-center">
 						<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="#DA87A9" style="border-bottom: #DA87A9 2px solid" class="bi bi-pencil-fill" viewBox="0 0 16 16">
 							<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
@@ -101,6 +102,7 @@
 							<v-field v-model="Phone" type="text" name="phone_format" id="phone" :readonly="!Edit" class="form-control my-2 cake__textinput"></v-field>
 							<error-message name="phone_format" class="position-absolute bottom-0 cake_pink fs_12"></error-message>
 						</li>
+						<h3 class="cake_pink fs_12">{{form.phone_number.errors}}</h3>
 					</ul>
 				</div>
 			</v-form>
@@ -124,7 +126,7 @@
 					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
 						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
 					</svg>
-					{% elif order.status == 'In delivery'}
+					{% elif order.status == 'In delivery' %}
 					<!-- Сюда иконку доставки -->
 					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
 						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
@@ -188,7 +190,7 @@
 			{% verbatim %}
             Schema: {
                 name_format: (value) => {
-                    const regex = /^[a-zA-Zа-яА-я]+$/
+                    const regex = /^[a-zA-Zа-яА-я ]+$/
                     if (!value) {
                         return '⚠ Поле не может быть пустым';
                     }

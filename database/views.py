@@ -13,7 +13,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.edit import FormView
+from django.views.generic.edit import UpdateView
 from django.urls import reverse
 
 from .models import Order, Layer, Shape, Topping, Berries, Decor, Customer
@@ -36,15 +36,23 @@ class IndexView(View):
         return redirect('index')
 
 
-class LKView(View):
+class LKView(UpdateView):
 
-    def get(self, request):
-        user = Customer.objects.filter(id=request.user.id).prefetch_related('orders').first()
-        context = {
-            'user': user,
-            'orders': user.orders.all()
-        }
-        return render(request, 'lk.html', context=context)
+    model = Customer
+    fields = ['name', 'phone_number']
+    template_name = 'lk.html'
+    success_url = '.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['orders'] = Customer.objects.filter(id=self.request.user.id).prefetch_related('orders').first().orders.all()
+        print(context)
+        return context
+
+    
+    def get_object(self):
+        return Customer.objects.filter(id=self.request.user.id).first()
+
 
 
 def generate_password(digits=4):
