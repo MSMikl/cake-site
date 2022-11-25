@@ -20,9 +20,8 @@ jobs:
       - name: ls
         run: ls -al && pwd
       - name: Build Docker image
-        run: docker build . -t $REPO
         uses: docker/build-push-action@v3
         with:
+          tags: $REPO
           context: .
-      - name: Publish Docker image
-        run: docker push $REPO
+          push: True
