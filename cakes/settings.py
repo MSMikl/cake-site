@@ -18,9 +18,8 @@ env.read_env()
 
 TG_TOKEN = env('TG_TOKEN', None)
 TG_CHAT_ID = env('TG_CHAT_ID', None)
-SHOP_ID = env('SHOP_ID', None)
-SHOP_API_KEY = ('SHOP_API_KEY', None)
-
+SHOP_ID = env.int('YOUKASSA_SHOP_ID', None)
+SHOP_TOKEN = env('YOUKASSA_TOKEN', None)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +37,6 @@ DEBUG = env('DJANGO_DEBUG', False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', [])
 
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', [])
-
 
 # Application definition
 
