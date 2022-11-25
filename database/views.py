@@ -24,6 +24,8 @@ class IndexView(View):
     def get(self, request):
         layers = Layer.objects.filter(available=True)
 
+        check_utm(request)
+
         context = {
             'layers': layers,
             'shapes': Shape.objects.filter(available=True),
