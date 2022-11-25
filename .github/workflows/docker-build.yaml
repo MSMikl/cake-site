@@ -1,0 +1,25 @@
+name: Release - Test, Build & Redeploy
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    name: Test - Unit & Integration
+    runs-on: ubuntu-18.04
+
+  docker:
+    name: Publish - Docker Hub
+    runs-on: ubuntu-18.04
+    env:
+      REPO: ${{ secrets.DOCKER_REPO }}
+    steps:
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} 
+             -p ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build Docker image
+        run: docker build . -t $REPO/cake-site
+      - name: Publish Docker image
+        run: docker push $REPO/cake-site
