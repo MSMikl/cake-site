@@ -559,11 +559,11 @@
             },
 			IDs: {
 				{% endverbatim %}
-				Levels: ['0', {% for layer in layers %} '{{layer.id}}', {% endfor %}],
-				Forms: ['0', {% for shape in shapes %} '{{shape.id}}', {% endfor %}],
-                Toppings: ['0', {% for topping in toppings %} '{{topping.id}}', {% endfor %}],
-                Berries: ['0', {% for berry in berries %} '{{berry.id}}', {% endfor %}],
-                Decors: ['0', {% for decor in decors %} '{{decor.id}}', {% endfor %}],
+				Levels: ['', {% for layer in layers %} '{{layer.id}}', {% endfor %}],
+				Forms: ['', {% for shape in shapes %} '{{shape.id}}', {% endfor %}],
+                Toppings: ['', {% for topping in toppings %} '{{topping.id}}', {% endfor %}],
+                Berries: ['', {% for berry in berries %} '{{berry.id}}', {% endfor %}],
+                Decors: ['', {% for decor in decors %} '{{decor.id}}', {% endfor %}],
 				{% verbatim %}
 			},
             Costs: {
@@ -576,11 +576,11 @@
                 Words: 500
 				{% verbatim %}
             },
-            Levels: '0',
-            Form: '0',
-            Topping: '0',
-            Berries: '0',
-            Decor: '0',
+            Levels: '',
+            Form: '',
+            Topping: '',
+            Berries: '',
+            Decor: '',
             Words: '',
             Comments: '',
             Designed: false,
