@@ -273,26 +273,11 @@
 						<label for="comment" class="cake_blue">Комментарий к заказу</label>
 						<textarea v-model="Comments" :class="Comments ? 'cake__border_blue': ''" name="comment" id="comment" rows="3" class="form-control mt-2 cake__textinput" style="resize: none"></textarea>
 					</div>
-					{% if user.is_authenticated %}
-					<!-- Тут вот для авторизованного пользователя исходный вариант -->
-						<div class="d-flex justify-content-end">
-							<button type="submit" class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">Подтвердить</button>
-							<a href="#step4" ref="ToStep4" class="d-none"></a>
-						</div>
-					{% else %}
-					<!-- А вот тут бы открывать по кнопке форму регистрации  -->
 					<div class="d-flex justify-content-end">
-						<form>
-							<a
-								class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink"
-								href="#RegModal"
-								data-bs-toggle="modal"
-							>
-								Подтвердить
-							</a>
-						</form>
+						<button type="submit" class="btn text-white rounded-pill mt-3 shadow-none cake__button cake__bg_pink">Подтвердить</button>
+						<a href="#step4" ref="ToStep4" class="d-none"></a>
 					</div>
-					{% endif %}
+
 				</v-form>
 			</section>
 
