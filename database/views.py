@@ -1,6 +1,8 @@
 import requests
 
+from datetime import datetime
 from random import choice
+
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, JsonResponse
@@ -95,3 +97,40 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('index')
+
+
+class MakeOrderView(View):
+    def post(self, request):
+        print(request.POST)
+        if request.user:
+            user = Customer.objects.get(phone_number=request.user.phone_number)
+        else:
+            user = Customer.objects.get_or_create(phone_number=request.POST.get('PHONE'))[0]
+        name = request.POST.get('NAME')
+        if name:
+            user.name = name
+            user.save()
+        d_date = request.POST.get('DATE', '1970-01-01')
+        d_time = request.POST.get('TIME', '00:00')
+        order = Order(
+            user=user,
+            layers_id=request.POST.get('LEVELS'),
+            shape_id=request.POST.get('FORM'),
+            topping_id=request.POST.get('TOPPING'),
+            berries_id=request.POST.get('BERRIES', '1'),
+            decor_id=request.POST.get('DECOR', '1'),
+            text=request.POST.get('WORDS', '1'),
+            comments=request.POST.get('COMMENTS', ''),
+            price=int(request.POST.get('COST', 0)),
+            address=request.POST.get('ADDRESS'),
+            delivery_details=request.POST.get('DELIVCOMMENTS'),
+            delivery_date=datetime.strptime(f"{d_date}-{d_time}", "%Y-%m-%d-%H:%M")
+        )
+        order.save()
+        print(order)
+        url = 'https://yookassa.ru/integration/simplepay/payment'
+        data = {
+            "sum": order.price
+        }
+        response = requests.post(url, json=data)
+        print(response)
