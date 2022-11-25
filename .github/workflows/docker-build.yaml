@@ -8,7 +8,7 @@ on:
 jobs:
   docker:
     name: Publish - Docker Hub
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     env:
       REPO: ${{ secrets.DOCKER_REPO }}/cake-site
     steps:
