@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'database',
     'request',
+    'utm.apps.UtmConfig'
 ]
 
 MIDDLEWARE = [

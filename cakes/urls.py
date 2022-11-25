@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from database.views import IndexView, LKView, RegisterView, LoginView, LogoutView, MakeOrderView, callback_post, count_promocode
 
@@ -28,4 +28,5 @@ urlpatterns = [
     path('makeorder/', MakeOrderView.as_view(), name='makeorder'),
     path('callback/', callback_post, name='callback'),
     path('promocode/', count_promocode, name='promocode'),
+    path('utm/', include('utm.urls')),
 ]

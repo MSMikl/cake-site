@@ -400,3 +400,4 @@ class Promocode(models.Model):
     class Meta:
         verbose_name = 'Промокод'
         verbose_name_plural = 'Промокоды'
+
