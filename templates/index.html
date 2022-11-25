@@ -120,13 +120,14 @@
 							</small>
 						</error-message>
 					</v-form>
-
+					{% endverbatim %}
 					<div class="modal-footer d-flex flex-column justify-content-between align-items-center text-center border-0 mx-5">
 						<a
-							href="https://storage.yandexcloud.net/where-to-go-bucket/file.pdf"
+							href="{% static 'agreement.pdf' %}"
 							target="_blank"
-							class="fs_12 cake_grey"
+							class="fs_12 cake_grey"	
 						>
+						{% verbatim %}
 							{{regFormField.info}}
 						</a>
 						<a href="#" v-if="regFormField.name === 'code'" @click.prevent="ToRegStep1" class="text-decoration-none cake_pink fs_12">изменить данные</a>
