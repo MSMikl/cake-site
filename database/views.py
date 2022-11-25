@@ -16,12 +16,16 @@ from django.views.generic.edit import UpdateView
 from django.urls import reverse
 from django.utils import timezone
 
+from utm.views import check_utm
 from .models import Order, Layer, Shape, Topping, Berries, Decor, Customer, Promocode
 
 
 class IndexView(View):
     def get(self, request):
         layers = Layer.objects.filter(available=True)
+
+        check_utm(request)
+
         context = {
             'layers': layers,
             'shapes': Shape.objects.filter(available=True),
