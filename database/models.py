@@ -93,29 +93,34 @@ class Order(models.Model):
         'Layer',
         verbose_name='Количество слоев',
         on_delete=models.SET_NULL,
+        related_name='orders',
         null=True,
     )
     shape = models.ForeignKey(
         'Shape',
         on_delete=models.SET_NULL,
+        related_name='orders',
         null=True,
         verbose_name='Форма'
     )
     topping = models.ForeignKey(
         'Topping',
         on_delete=models.SET_DEFAULT,
+        related_name='orders',
         default='1',
         verbose_name='Топпинг'
     )
     berries = models.ForeignKey(
         'Berries',
         on_delete=models.SET_DEFAULT,
+        related_name='orders',
         default='1',
         verbose_name='Ягоды'
     )
     decor = models.ForeignKey(
         'Decor',
         on_delete=models.SET_DEFAULT,
+        related_name='orders',
         default='1',
         verbose_name='Украшение'
     )
@@ -196,6 +201,9 @@ class Layer(models.Model):
         default=True,
     )
 
+    def orders_count(self):
+        return self.orders.count()
+
     @property
     def int_price(self):
         return int(self.price)
@@ -230,6 +238,9 @@ class Shape(models.Model):
         'Доступно к заказу',
         default=True,
     )
+    
+    def orders_count(self):
+        return self.orders.count()
 
     @property
     def int_price(self):
@@ -265,6 +276,9 @@ class Topping(models.Model):
         'Доступно к заказу',
         default=True,
     )
+    
+    def orders_count(self):
+        return self.orders.count()
 
     @property
     def int_price(self):
@@ -300,6 +314,9 @@ class Berries(models.Model):
         'Доступно к заказу',
         default=True,
     )
+    
+    def orders_count(self):
+        return self.orders.count()
 
     @property
     def int_price(self):
@@ -335,6 +352,9 @@ class Decor(models.Model):
         'Доступно к заказу',
         default=True,
     )
+    
+    def orders_count(self):
+        return self.orders.count()
 
     @property
     def int_price(self):
@@ -346,16 +366,3 @@ class Decor(models.Model):
     class Meta:
         verbose_name = 'Опция украшения'
         verbose_name_plural = 'Опции украшения'
-
-
-class OrderForm(ModelForm):
-    layers = forms.ModelChoiceField(Layer.objects.all(), widget=forms.RadioSelect())
-    class Meta:
-        model = Order
-        fields = ['layers', 'shape', 'topping', 'berries', 'decor', 'text', 'comments']
-
-
-class UserForm(ModelForm):
-    class Meta:
-        model = Customer
-        fields = ['name', 'phone_number']

@@ -15,28 +15,30 @@ class CutomerAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     exclude = ['payment_id']
+    list_display = ['__str__', 'price', 'user', 'creation_date', 'status']
+    list_filter = ['status', 'user', 'creation_date']
 
 
 @admin.register(Layer)
 class LayerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'price', 'orders_count']
 
 
 @admin.register(Shape)
 class ShapeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'price', 'orders_count']
 
 
 @admin.register(Topping)
 class ToppingAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'price', 'orders_count']
 
 
 @admin.register(Berries)
 class BerriesAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'price', 'orders_count']
 
 
 @admin.register(Decor)
 class DecorAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__str__', 'price', 'orders_count']
