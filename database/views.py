@@ -1,5 +1,4 @@
 import json
-import logging
 import requests
 import uuid
 
@@ -15,8 +14,9 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import UpdateView
 from django.urls import reverse
+from django.utils import timezone
 
-from .models import Order, Layer, Shape, Topping, Berries, Decor, Customer
+from .models import Order, Layer, Shape, Topping, Berries, Decor, Customer, Promocode
 
 
 class IndexView(View):
@@ -49,10 +49,8 @@ class LKView(UpdateView):
         print(context)
         return context
 
-    
     def get_object(self):
         return Customer.objects.filter(id=self.request.user.id).first()
-
 
 
 def generate_password(digits=4):
@@ -126,6 +124,12 @@ class MakeOrderView(View):
             user.save()
         d_date = request.POST.get('DATE', '1970-01-01')
         d_time = request.POST.get('TIME', '00:00')
+        promocode = request.POST.get('promocode')
+        price = int(request.POST.get('COST', 10000))
+        if promocode:
+            code = Promocode.objects.filter(text=promocode, is_active=True, active_date__gte=timezone.now()).last()
+            if code:
+                price = price*code.discount/100
         order = Order(
             user=user,
             layers_id=request.POST.get('LEVELS'),
@@ -135,7 +139,7 @@ class MakeOrderView(View):
             decor_id=request.POST.get('DECOR', '1'),
             text=request.POST.get('WORDS', '1'),
             comments=request.POST.get('COMMENTS', ''),
-            price=int(request.POST.get('COST', 0)),
+            price=price,
             address=request.POST.get('ADDRESS'),
             delivery_details=request.POST.get('DELIVCOMMENTS'),
             delivery_date=datetime.strptime(f"{d_date}-{d_time}", "%Y-%m-%d-%H:%M")

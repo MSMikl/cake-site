@@ -139,6 +139,14 @@ class Order(models.Model):
         max_digits=10,
         decimal_places=2
     )
+    promocode = models.ForeignKey(
+        'Promocode',
+        on_delete=models.SET_NULL,
+        verbose_name='Промокод',
+        related_name='orders',
+        null=True,
+        blank=True,
+    )
     creation_date = models.DateTimeField(
         'Дата создания заказа',
         default=timezone.now,
@@ -366,3 +374,23 @@ class Decor(models.Model):
     class Meta:
         verbose_name = 'Опция украшения'
         verbose_name_plural = 'Опции украшения'
+
+
+class Promocode(models.Model):
+    text = models.CharField(
+        'Текст промокода',
+        max_length=50,
+    )
+    discount = models.DecimalField(
+        'Скидка в %',
+        decimal_places=2,
+        max_digits=5,
+    )
+    is_active = models.BooleanField(
+        'Активен',
+        default=False,
+    )
+    active_date = models.DateTimeField(
+        'Дата окончания действия',
+        default=timezone.now,
+    )
