@@ -10,12 +10,12 @@ jobs:
     name: Publish - Docker Hub
     runs-on: ubuntu-18.04
     env:
-      REPO: ${{ secrets.DOCKER_REPO }}
+      REPO: ${{ secrets.DOCKER_REPO }}/cake-site
     steps:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} 
              -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker image
-        run: docker build . -t $REPO/cake-site
+        run: docker build . -t $REPO
       - name: Publish Docker image
-        run: docker push $REPO/cake-site
+        run: docker push $REPO
