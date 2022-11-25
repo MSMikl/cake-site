@@ -3,7 +3,9 @@ import yookassa
 from yookassa import Configuration, Settings, Payment
 from yookassa.domain.common import Version
 
-Configuration.configure('960967', 'test_GXCjiHgInX03qbsrnr00a041ogcDKHnpC0jyVl3M7uw')
+from cakes import settings
+
+Configuration.configure(settings.SHOP_ID, settings.SHOP_API_KEY)
 
 Configuration.configure_user_agent(
     framework=Version('Django', '4.1.3')
