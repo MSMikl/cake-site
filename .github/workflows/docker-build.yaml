@@ -9,19 +9,13 @@ jobs:
   docker:
     name: Publish - Docker Hub
     runs-on: ubuntu-22.04
-    env:
-      REPO: ${{ secrets.DOCKER_REPO }}/cake-site
     steps:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} 
              -p ${{ secrets.DOCKER_PASSWORD }}
-      - name: echo
-        run: echo $REPO
-      - name: ls
-        run: ls -al && pwd
       - name: Build Docker image
         uses: docker/build-push-action@v3
         with:
-          tags: $REPO
+          tags: ${{ secrets.DOCKER_REPO }}/cake-site
           context: .
           push: True
