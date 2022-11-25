@@ -187,3 +187,17 @@ def callback_post(request):
             text = f"Оплата заказа {order.number} отменена"
         send_message(text)
         return HttpResponse(status=200)
+
+
+@csrf_exempt
+def count_promocode(request):
+    if request.method == 'GET':
+        code = request.GET.get('PROMOCODE')
+        discount = 0
+        correct = False
+        if code:
+            promocode = Promocode.objects.filter(text=code, is_active=True, active_date__gte=timezone.now()).last()
+            if promocode:
+                correct = True
+                discount = promocode.discount/100
+        return JsonResponse({'correct': correct, 'discount': discount})

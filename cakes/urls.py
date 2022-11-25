@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from database.views import IndexView, LKView, RegisterView, LoginView, LogoutView, MakeOrderView, callback_post
+from database.views import IndexView, LKView, RegisterView, LoginView, LogoutView, MakeOrderView, callback_post, count_promocode
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('makeorder/', MakeOrderView.as_view(), name='makeorder'),
     path('callback/', callback_post, name='callback'),
+    path('promocode/', count_promocode, name='promocode'),
 ]

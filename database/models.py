@@ -394,3 +394,9 @@ class Promocode(models.Model):
         'Дата окончания действия',
         default=timezone.now,
     )
+    def __str__(self) -> str:
+        return f"{self.text} на {int(self.discount)}%"
+
+    class Meta:
+        verbose_name = 'Промокод'
+        verbose_name_plural = 'Промокоды'

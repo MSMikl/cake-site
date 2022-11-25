@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 
-from .models import Customer, Order, Decor, Shape, Layer, Topping, Berries
+from .models import Customer, Order, Decor, Shape, Layer, Topping, Berries, Promocode
 
 # Register your models here.
 
@@ -52,3 +52,8 @@ class BerriesAdmin(admin.ModelAdmin):
 @admin.register(Decor)
 class DecorAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'price', 'orders_count']
+
+
+@admin.register(Promocode)
+class PromocodeAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'discount', 'active_date']
