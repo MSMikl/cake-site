@@ -65,11 +65,13 @@ class Customer(AbstractUser):
 
 
 class Order(models.Model):
+    PAYMENT = 'Payment'
     PREPARING = 'Preparing'
     IN_DELIVERY = 'In delivery'
     COMPLETED = 'Completed'
 
     STATUSES = [
+        (PAYMENT, 'Ожидает оплаты'),
         (PREPARING, 'Готовится'),
         (IN_DELIVERY, 'Доставляется'),
         (COMPLETED, 'Завершен'),
@@ -145,7 +147,7 @@ class Order(models.Model):
         'Статус заказа',
         max_length=20,
         choices=STATUSES,
-        default=PREPARING,
+        default=PAYMENT,
     )
     delivery_date = models.DateTimeField(
         'Дата и время доставки',
@@ -157,6 +159,12 @@ class Order(models.Model):
         'Комментарии для курьера',
         blank=True,
         default='',
+    )
+    payment_id = models.CharField(
+        'id оплаты',
+        max_length=50,
+        null=True,
+        blank=True,
     )
 
     def __str__(self) -> str:

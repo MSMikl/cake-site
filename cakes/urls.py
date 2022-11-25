@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from database.views import IndexView, LKView, RegisterView, LoginView, LogoutView, MakeOrderView
+from database.views import IndexView, LKView, RegisterView, LoginView, LogoutView, MakeOrderView, callback_post
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('phone/', RegisterView.as_view(), name='phone'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('makeorder/', MakeOrderView.as_view(), name='makeorder')
+    path('makeorder/', MakeOrderView.as_view(), name='makeorder'),
+    path('callback/', callback_post, name='callback'),
 ]

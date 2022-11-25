@@ -1,16 +1,22 @@
+import json
+import logging
 import requests
+import uuid
 
 from datetime import datetime
 from random import choice
+from requests.auth import HTTPBasicAuth
 
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
+from django.urls import reverse
 
-from .models import Order, OrderForm, Layer, Shape, Topping, Berries, Decor, Customer
+from .models import Order, Layer, Shape, Topping, Berries, Decor, Customer
 
 
 class IndexView(View):
@@ -101,11 +107,11 @@ class LogoutView(View):
 
 class MakeOrderView(View):
     def post(self, request):
-        print(request.POST)
-        if request.user:
+        if request.user.is_authenticated:
             user = Customer.objects.get(phone_number=request.user.phone_number)
         else:
             user = Customer.objects.get_or_create(phone_number=request.POST.get('PHONE'))[0]
+            login(request, user)
         name = request.POST.get('NAME')
         if name:
             user.name = name
@@ -126,11 +132,46 @@ class MakeOrderView(View):
             delivery_details=request.POST.get('DELIVCOMMENTS'),
             delivery_date=datetime.strptime(f"{d_date}-{d_time}", "%Y-%m-%d-%H:%M")
         )
-        order.save()
-        print(order)
-        url = 'https://yookassa.ru/integration/simplepay/payment'
+        url = 'https://api.yookassa.ru/v3/payments'
+        uuid_key = str(uuid.uuid4())
         data = {
-            "sum": order.price
+            "amount": {
+            "value": order.price,
+            "currency": "RUB"
+            },
+            "payment_id": uuid_key,
+            "capture": True,
+                "confirmation": {
+                "type": "redirect",
+                "return_url": f"https://{request.get_host()}{reverse('lk')}",
+                },
+            "description": "Заказ №1"
         }
-        response = requests.post(url, json=data)
-        print(response)
+        headers = {
+            "Idempotence-Key": uuid_key,
+            "Content-Type": "application/json",
+        }
+        auth = HTTPBasicAuth(settings.SHOP_ID, settings.SHOP_TOKEN)
+        response = requests.post(url, json=data, headers=headers, auth=auth)
+        response.raise_for_status()
+        payment_data = response.json()
+        payment_url = payment_data.get('confirmation', {}).get('confirmation_url')
+        order.payment_id = payment_data.get('id')
+        order.save()
+        return redirect(payment_url)
+
+
+@csrf_exempt
+def callback_post(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        id = data['object']['id']
+        order = Order.objects.get(payment_id=id)
+        if data.get('event') == 'payment.succeeded':
+            order.status = Order.PREPARING
+            order.save()
+            text = f"Оплата заказа {order.number} прошла успешно. Мы уже готовим ваш заказ"
+        elif data.get('event') == 'payment.canceled':
+            text = f"Оплата заказа {order.number} отменена"
+        send_message(text)
+        return HttpResponse(status=200)
