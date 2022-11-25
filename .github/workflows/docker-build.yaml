@@ -20,6 +20,9 @@ jobs:
       - name: ls
         run: ls -al && pwd
       - name: Build Docker image
-        run: docker build . -t $REPO -f ./Dockerfile
+        run: docker build . -t $REPO
+        uses: docker/build-push-action@v2
+        with:
+          context: app
       - name: Publish Docker image
         run: docker push $REPO
