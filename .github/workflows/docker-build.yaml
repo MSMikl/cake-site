@@ -6,10 +6,6 @@ on:
       - 'main'
 
 jobs:
-  test:
-    name: Test - Unit & Integration
-    runs-on: ubuntu-18.04
-
   docker:
     name: Publish - Docker Hub
     runs-on: ubuntu-18.04
