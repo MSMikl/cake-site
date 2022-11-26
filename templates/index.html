@@ -307,7 +307,16 @@
 								<v-field v-model="Address" :class="Address ? 'cake__border_blue': ''" type="text" name="address" id="address" placeholder="Введите ваш адрес" class="form-control my-3 cake__textinput"></v-field>
 								<v-field v-model="Dates" :class="Dates ? 'cake__border_blue': ''" type="date" name="date" id="date" placeholder="ДД.ММ.ГГ" class="form-control my-3 cake__textinput"></v-field>
 								<v-field v-model="Time" :class="Time ? 'cake__border_blue': ''" type="time" name="time" id="time" placeholder="00:00" class="form-control my-3 cake__textinput"></v-field>
-								<v-field v-model="Promocode" :class="Address ? 'cake__border_blue': ''" type="text" name="promocode" id="promocode" placeholder="Введите промокод" class="form-control my-3 cake__textinput"></v-field>
+								<v-field v-model="Promocode" :class="Address ? 'cake__border_blue': ''" type="text" name="promocode" id="promocode" placeholder="Введите промокод" class="form-control my-3 cake__textinput">
+								</v-field>
+								<button
+									@click="applyPromocode"
+									type="button"
+									class="btn btn_hover text-white rounded-pill mt-3 px-5 shadow-none cake__button cake__bg_pink"
+								>
+									Применить
+								</button>
+								<p v-if="promocodeIncorrect" class="from__alert self-center">Промокод не действителен</p>
 							</div>
 						</div>
 						<div class="row mt-3">
@@ -476,14 +485,27 @@
             DelivComments: '',
 			Total: 0,
 			showModal: false,
-			Tcost: 0
+			Tcost: 0,
+			Promocode: '',
+			promocodeIncorrect: false,
+			discount: 0
         }
     },
     methods: {
         ToStep4() {
             this.Designed = true
             setTimeout(() => this.$refs.ToStep4.click(), 0);
-        }
+        },
+		async applyPromocode() {
+			const { data: { correct, discount } } = await axios.get('promocode/', {params: {PROMOCODE: this.Promocode}})
+			if (correct) {
+				this.discount = Number(discount)
+				this.promocodeIncorrect = false
+			} else {
+				this.promocodeIncorrect = true
+				this.discount = 0
+			}
+		}
     },
     computed: {
         Cost() {
@@ -491,7 +513,7 @@
 			this.Total = this.Costs.Levels[this.IDs.Levels.indexOf(this.Levels)] + this.Costs.Forms[this.IDs.Forms.indexOf(this.Form)] +
                 this.Costs.Toppings[this.IDs.Toppings.indexOf(this.Topping)] + this.Costs.Berries[this.IDs.Berries.indexOf(this.Berries)] +
                 this.Costs.Decors[this.IDs.Decors.indexOf(this.Decor)] + W;
-            this.Tcost = this.Total;
+			this.Total -= this.Total * this.discount
             return this.Total
         }
     },

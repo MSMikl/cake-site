@@ -136,3 +136,6 @@ li .cake__textinput:read-only {
 .max-w-full {
     max-width: 100%;
 }
+.self-center {
+    align-self: center;
+}
