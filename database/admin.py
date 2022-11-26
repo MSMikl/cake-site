@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 
 from .models import Customer, Order, Decor, Shape, Layer, Topping, Berries, Promocode
+from .utils import export_to_csv
+
 
 # Register your models here.
 
@@ -11,6 +13,8 @@ class CutomerAdmin(admin.ModelAdmin):
     list_display_links = ['__str__', 'phone_number']
     exclude = ['last_login', 'groups', 'user_permissions', 'password']
     readonly_fields = ['is_superuser', 'date_joined']
+
+    actions = [export_to_csv]
 
 
 class MyChangeList(ChangeList):
@@ -27,6 +31,8 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_changelist(self, request, **kwargs):
         return MyChangeList
+
+    actions = [export_to_csv]
 
 
 @admin.register(Layer)
