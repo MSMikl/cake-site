@@ -179,6 +179,11 @@ class Order(models.Model):
         null=True,
         blank=True,
     )
+    feedback = models.TextField(
+        'Отзыв о заказе',
+        blank=True,
+        default=''
+    )
 
     def __str__(self) -> str:
         return f"Заказ номер {self.number}"

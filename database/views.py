@@ -49,8 +49,7 @@ class LKView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['orders'] = Customer.objects.filter(id=self.request.user.id).prefetch_related('orders').first().orders.all()
-        print(context)
+        context['orders'] = Customer.objects.filter(id=self.request.user.id).first().orders.all()
         return context
 
     def get_object(self):
@@ -205,3 +204,19 @@ def count_promocode(request):
                 correct = True
                 discount = promocode.discount/100
         return JsonResponse({'correct': correct, 'discount': discount})
+
+
+def post_feedback(request):
+    if request.method == 'POST':
+        number = request.POST.get('order_number')
+        feedback = request.POST.get('feedback')
+        order = Order.objects.get(number=number)
+        order.feedback = feedback
+        order.save()
+        text = f"""
+Покупатель {order.user.name} оставил обратную связь по заказу номер {order.number}
+Текст комментария:
+{feedback}
+        """
+        send_message(text)
+        return redirect('lk')
